@@ -7,7 +7,8 @@ try {
 	$phar = new Phar($archFile);
 	$phar->buildFromDirectory(dirname(__FILE__).'/orpheus');
 // 	echo $phar->createDefaultStub('console/index.php', 'web/index.php')."\n";
-	$phar->setStub($phar->createDefaultStub('console/index.php', 'web/index.php'));
+// 	$phar->setStub($phar->createDefaultStub('console/index.php', 'web/index.php'));
+	$phar->setDefaultStub('console/index.php', 'web/index.php');
 	echo 'Compiled files into '.$archFile."\n";
 	
 } catch (Exception $e) {

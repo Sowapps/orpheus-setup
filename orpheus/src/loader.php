@@ -9,6 +9,7 @@ require_once 'InstallTask.php';
 
 require_once 'FrontInterface.php';
 require_once 'ConsoleInterface.php';
+require_once 'WebInterface.php';
 
 function rcopy($src, $dst) {
 // 	echo "rcopy($src, $dst)\n";

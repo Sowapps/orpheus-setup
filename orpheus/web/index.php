@@ -1,6 +1,6 @@
 <?php
 
-echo 'WEB STUB';
+// echo "WEB STUB\n";
 
 define('IS_WEB', 1);
 
