@@ -15,7 +15,7 @@ class ConsoleInterface extends FrontInterface {
 // 			ob_end_flush();
 // 			$this->write('Finally flushed console');
 		}
-		$this->write('Terminated task in console');
+// 		$this->write('Terminated task in console');
 		
 	}
 

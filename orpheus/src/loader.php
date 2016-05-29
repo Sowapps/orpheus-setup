@@ -31,7 +31,7 @@ function rcopy($src, $dst) {
 }
 
 function rmove($src, $dst) {
-	echo "rmove($src, $dst)\n";
+// 	echo "rmove($src, $dst)\n";
 	$dir = opendir($src);
 	try {
 		mkdir($dst);
@@ -65,7 +65,7 @@ function b($b) {
 }
 
 function force_rmdir($path, $recursive=false) {
-	echo "force_rmdir($path, ".b($recursive).")\n";
+// 	echo "force_rmdir($path, ".b($recursive).")\n";
 	$dir = opendir($path);
 	while( ($file = readdir($dir)) !== false && $file !== null ) {
 		// Sometimes on a WAMP, a null occurs

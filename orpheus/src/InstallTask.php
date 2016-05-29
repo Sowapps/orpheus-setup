@@ -44,6 +44,7 @@ class InstallTask extends Task {
 		$this->createComposerFile();
 		// Start install of Orpheus
 		system('php composer.phar install --prefer-dist');
+		echo "\n";
 // 		if( OperatingSystem::isWindowsNT() ) {
 // 			system('attrib -R "vendor/orpheus/orpheus-framework" /S /D');
 // 		}
@@ -57,12 +58,15 @@ class InstallTask extends Task {
 		@unlink($wd.'/.buildpath');
 		@unlink($wd.'/.project');
 
-		$out->writeTitle('Get Orpheus dependencies');
+		$out->writeTitle("Get Orpheus dependencies");
 		$composerConfig = json_decode(file_get_contents($this->composerJSONFile), true);
 		$composerConfig = array_intersect_key($composerConfig, array_flip(array('type', 'require')));
 		file_put_contents($this->composerJSONFile, json_encode($composerConfig));
 		// Retrieve Orpheus dependencies
 		system('php composer.phar install');
+		echo "\n";
+
+		$out->writeTitle("Installed Orpheus successfully !");
 
 // 		die("Composer install terminated\n");
 // 		echo "Composer install terminated\n";
