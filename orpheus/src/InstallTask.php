@@ -69,9 +69,15 @@ class InstallTask extends Task {
 		// Start install of Orpheus
 		$command = 'php '.$wd.'/composer.phar create-project "orpheus/orpheus-framework" '.$this->getProjectName().' --prefer-dist 2>&1';
 		system($command, $returnVal);
+		$out->write('');
 		if( $returnVal ) {
 			throw new Exception('Something went wrong with composer.phar, command "'.$command.'" returned value '.$returnVal);
 		}
+
+		@force_rmdir($wd.'/'.$this->getProjectName().'/.settings');
+		@unlink($wd.'/'.$this->getProjectName().'/.buildpath');
+		@unlink($wd.'/'.$this->getProjectName().'/.project');
+		
 		
 		/*
 		//if (hash_file('SHA384', 'composer-setup.php') === '92102166af5abdb03f49ce52a40591073a7b859a86e8ff13338cf7db58a19f7844fbc0bb79b2773bf30791e935dbd938') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;
