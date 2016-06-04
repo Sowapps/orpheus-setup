@@ -105,4 +105,15 @@ EOF
 		include 'static/layouts/page_skeleton.php';
 	}
 	
+	public function reportException(Exception $e) {
+		echo '
+*** Error '.get_class($e).'  ***
+
+'.$e->getMessage().'
+
+* Stacktrace *
+'.$e->getTraceAsString().'
+';
+	}
+	
 }

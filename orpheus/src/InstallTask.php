@@ -2,10 +2,12 @@
 
 class InstallTask extends Task {
 
-	protected $composerInstallURL = 'https://getcomposer.org/installer';
-	protected $composerInstallFile = 'composer-setup.php';
+	protected $composerInstallerURL = 'https://getcomposer.org/installer';
+	protected $composerInstallerFile = 'composer-setup.php';
 	protected $composerJSONFile = 'composer.json';
 
+	protected $projectName;
+	
 	/**
 	 * @see Task::run()
 	 */
@@ -42,22 +44,36 @@ class InstallTask extends Task {
 		
 		// Install composer.phar
 		$out->writeTitle('Get Composer');
-// 		$out->write("copy({$this->composerInstallURL}, {$wd}/{$this->composerInstallFile});");
-		copy($this->composerInstallURL, $wd.'/'.$this->composerInstallFile);
+		
+		// Get composer setup
+		$out->write("copy({$this->composerInstallerURL}, {$wd}/{$this->composerInstallerFile});");
+		copy($this->composerInstallerURL, $wd.'/'.$this->composerInstallerFile);
+		
 // 		$out->write('pwd');
 // 		system('pwd');
 // 		$out->write('');
+
+		// Run composer setup to get composer.phar
 		putenv('COMPOSER_HOME='.$wd.'/.composer');
-// 		$out->write('php '.$wd.'/'.$this->composerInstallFile.' 2>&1');
-		$command = 'php '.$wd.'/'.$this->composerInstallFile.' 2>&1';
+// 		$out->write('php '.$wd.'/'.$this->composerInstallerFile.' 2>&1');
+		$command = 'php '.$wd.'/'.$this->composerInstallerFile.' 2>&1';
 		system($command, $returnVal);
 // 		$out->write('');
 		if( $returnVal ) {
-			throw new Exception('Something went wrong with '.$this->composerInstallFile.', command "'.$command.'" returned value '.$returnVal);
+			throw new Exception('Something went wrong with '.$this->composerInstallerFile.', command "'.$command.'" returned value '.$returnVal);
 		}
 // 		$out->write('Command returned => '.$return);
-		unlink($wd.'/'.$this->composerInstallFile);
+		unlink($wd.'/'.$this->composerInstallerFile);
+
+		$out->writeTitle('Get Orpheus');
+		// Start install of Orpheus
+		$command = 'php '.$wd.'/composer.phar create-project "orpheus/orpheus-framework" '.$this->getProjectName().' --prefer-dist 2>&1';
+		system($command, $returnVal);
+		if( $returnVal ) {
+			throw new Exception('Something went wrong with composer.phar, command "'.$command.'" returned value '.$returnVal);
+		}
 		
+		/*
 		//if (hash_file('SHA384', 'composer-setup.php') === '92102166af5abdb03f49ce52a40591073a7b859a86e8ff13338cf7db58a19f7844fbc0bb79b2773bf30791e935dbd938') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;
 		// require_once $this->composerInstall;
 		// This script ends the current one, so we use exec
@@ -89,6 +105,7 @@ class InstallTask extends Task {
 		// Retrieve Orpheus dependencies
 		system('php '.$wd.'/composer.phar install 2>&1');
 		echo "\n";
+		*/
 
 		$out->writeTitle("Installed Orpheus successfully !");
 
@@ -108,4 +125,11 @@ class InstallTask extends Task {
 		)));
 	}
 	
+	public function getProjectName() {
+		return $this->projectName;
+	}
+	public function setProjectName($projectName) {
+		$this->projectName = $projectName;
+		return $this;
+	}
 }

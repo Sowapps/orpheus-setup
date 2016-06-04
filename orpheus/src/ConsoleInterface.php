@@ -26,13 +26,20 @@ class ConsoleInterface extends FrontInterface {
 	public function getInputTask() {
 		switch( $_SERVER['argv'][1] ) {
 			case 'install': {
-				return new InstallTask();
+				$task = new InstallTask();
+				if( empty($_SERVER['argv'][2]) ) {
+					throw new InvalidArgumentException('Missing projectname parameter');
+				}
+				$task->setProjectName($_SERVER['argv'][2]);
 				break;
 			}
 // 			case 'update': {
 // 				$this->update();
 // 				break;
 // 			}
+		}
+		if( $task ) {
+			return $task;
 		}
 	}
 
@@ -42,8 +49,8 @@ USAGE
 	{$_SERVER['argv'][0]} {command}
 
 COMMANDS
-	install
-	Install Orpheus in the current directory.
+	install projectname
+	Install Orpheus in the projectname directory.
 	
 EOF;
 	}
@@ -88,6 +95,17 @@ EOF;
 	
 	public function writeSmallTitle($text) {
 		echo $text."\n";
+	}
+	
+	public function reportException(Exception $e) {
+		echo '
+*** '.get_class($e).'  ***
+
+'.$e->getMessage().'
+
+* Stacktrace *
+'.$e->getTraceAsString().'
+';
 	}
 	
 }

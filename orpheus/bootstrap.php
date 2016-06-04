@@ -20,7 +20,11 @@ if( !defined('APPLICATION_PATH') ) {
 }
 
 if( $interface->hasInputTask() ) {
-	$interface->exec($interface->getInputTask());
+	try {
+		$interface->exec($interface->getInputTask());
+	} catch( Exception $e ) {
+		$interface->reportException($e);
+	}
 } else {
 	$interface->printHelp();
 }

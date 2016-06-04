@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * php build.php && copy /Y orpheus.phar "..\..\Workspace-Web\OrpheusInstallerTest\"
+ */
+
 try {
 // 	ini_set('phar.readonly', 0);
 	$archFile = 'orpheus.phar';
