@@ -9,7 +9,11 @@ try {
 	$archFile = 'orpheus.phar';
 	
 	$phar = new Phar($archFile);
-	$phar->buildFromDirectory(dirname(__FILE__).'/orpheus');
+	try {
+		$phar->buildFromDirectory(dirname(__FILE__).'/orpheus');
+	} catch( UnexpectedValueException $e ) {
+		throw new Exception('Unable to create phar archive, phar are readonly, edit the php.ini configuration to set phar.readonly to Off', 0, $e);
+	}
 // 	echo $phar->createDefaultStub('console/index.php', 'web/index.php')."\n";
 // 	$phar->setStub($phar->createDefaultStub('console/index.php', 'web/index.php'));
 	$phar->setDefaultStub('console/index.php', 'web/index.php');
