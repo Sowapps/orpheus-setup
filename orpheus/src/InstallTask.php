@@ -50,7 +50,7 @@ class InstallTask extends Task {
 		// https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
 		
 		// Get composer setup
-		$out->write("copy({$this->composerInstallerURL}, {$wd}/{$this->composerInstallerFile});");
+// 		$out->write("copy({$this->composerInstallerURL}, {$wd}/{$this->composerInstallerFile});");
 		copy($this->composerInstallerURL, $wd.'/'.$this->composerInstallerFile);
 		
 // 		$out->write('pwd');
@@ -73,6 +73,8 @@ class InstallTask extends Task {
 		$projectFolder = basename($this->getProjectName());
 		$projectPath = file_exists($this->getProjectName()) ? $this->getProjectName() : $wd.'/'.$this->getProjectName();
 // 		$out->write("Is project folder \"{$projectFolder}\" existing in \"".$wd."\" ? ".(file_exists($projectPath) ? 'YES' : 'no'));
+		
+		$out->write('');
 		
 		if( file_exists($projectPath) ) {
 			$out->writeTitle('Update existing Orpheus project');
