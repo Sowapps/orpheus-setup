@@ -45,6 +45,9 @@ class InstallTask extends Task {
 		// Install composer.phar
 		$out->writeTitle('Get Composer');
 		
+		// TODO: Use official way
+		// https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
+		
 		// Get composer setup
 		$out->write("copy({$this->composerInstallerURL}, {$wd}/{$this->composerInstallerFile});");
 		copy($this->composerInstallerURL, $wd.'/'.$this->composerInstallerFile);
