@@ -36,6 +36,7 @@ class InstallTask extends Task {
 // 			echo 'RealPath => '.realpath('.')."\n";
 			throw new Exception('Install folder is not writable');
 		}
+		
 // 		file_put_contents('test-OK.txt', 'OK');
 // 		return;
 		$out->writeMasterTitle('Orpheus Install');
@@ -68,58 +69,61 @@ class InstallTask extends Task {
 // 		$out->write('Command returned => '.$return);
 		unlink($wd.'/'.$this->composerInstallerFile);
 
-		$out->writeTitle('Get Orpheus');
-		// Start install of Orpheus
-		$command = 'php '.$wd.'/composer.phar create-project "orpheus/orpheus-framework" '.$this->getProjectName().' --prefer-dist 2>&1';
-		system($command, $returnVal);
-		$out->write('');
-		if( $returnVal ) {
-			throw new Exception('Something went wrong with composer.phar, command "'.$command.'" returned value '.$returnVal);
+		// Allow relative and absolute paths
+		$projectFolder = basename($this->getProjectName());
+		$projectPath = file_exists($this->getProjectName()) ? $this->getProjectName() : $wd.'/'.$this->getProjectName();
+// 		$out->write("Is project folder \"{$projectFolder}\" existing in \"".$wd."\" ? ".(file_exists($projectPath) ? 'YES' : 'no'));
+		
+		if( file_exists($projectPath) ) {
+			$out->writeTitle('Update existing Orpheus project');
+			if( !is_dir($projectPath) || !is_writable($projectPath) ) {
+				throw new Exception('Project '.$projectFolder.' already exists and is not a folder.');
+			}
+			if( !isComposerProject($projectPath) ) {
+				throw new Exception('Project '.$projectFolder.' already exists and is not a valid composer project.');
+			}
+			if( !isOrpheusProject($projectPath) ) {
+				throw new Exception('Project '.$projectFolder.' already exists and is not a valid composer project.');
+			}
+			// Install composer dependencies in Orpheus
+			$this->exec('php composer.phar install --working-dir '.$projectFolder.' --prefer-dist 2>&1', $out);
+// 			system($command, $returnVal);
+// 			$out->write('');
+// 			if( $returnVal ) {
+// 				throw new Exception('Something went wrong with composer.phar, command "'.$command.'" returned value '.$returnVal);
+// 			}
+			$out->writeTitle("Installed Orpheus dependencies in existing project successfully !");
+			
+		} else {
+			$out->writeTitle('Get Orpheus');
+			// Start install of Orpheus
+			$command = 'php composer.phar create-project "orpheus/orpheus-framework" '.$projectFolder.' --prefer-dist 2>&1';
+// 			$command = 'php '.$wd.'/composer.phar create-project "orpheus/orpheus-framework" '.$projectFolder.' --prefer-dist 2>&1';
+			$this->exec($command, $out);
+// 			system($command, $returnVal);
+// 			$out->write('');
+// 			if( $returnVal ) {
+// 				throw new Exception('Something went wrong with composer.phar, command "'.$command.'" returned value '.$returnVal);
+// 			}
+			
+			@force_rmdir($wd.'/'.$this->getProjectName().'/.settings');
+			@unlink($wd.'/'.$this->getProjectName().'/.buildpath');
+			@unlink($wd.'/'.$this->getProjectName().'/.project');
+			
+			$out->writeTitle("Installed Orpheus successfully !");
 		}
-
-		@force_rmdir($wd.'/'.$this->getProjectName().'/.settings');
-		@unlink($wd.'/'.$this->getProjectName().'/.buildpath');
-		@unlink($wd.'/'.$this->getProjectName().'/.project');
 		
-		
-		/*
-		//if (hash_file('SHA384', 'composer-setup.php') === '92102166af5abdb03f49ce52a40591073a7b859a86e8ff13338cf7db58a19f7844fbc0bb79b2773bf30791e935dbd938') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;
-		// require_once $this->composerInstall;
-		// This script ends the current one, so we use exec
-// 		echo "Installing composer\n";
+	}
 
-		$out->writeTitle('Get Orpheus');
-		// Create json if not existing
-		$this->createComposerFile();
-		// Start install of Orpheus
-		system('php '.$wd.'/composer.phar install --prefer-dist 2>&1');
-		$out->write('');
-// 		if( OperatingSystem::isWindowsNT() ) {
-// 			system('attrib -R "vendor/orpheus/orpheus-framework" /S /D');
-// 		}
-		rcopy($wd.'/vendor/orpheus/orpheus-framework', $wd);
-		OperatingSystem::getCurrent()->removePath($wd.'/vendor/orpheus/orpheus-framework');
-
-// 		$out->writeTitle('Clean Orpheus');
-		
-		unlink($wd.'/composer.lock');
-		@force_rmdir($wd.'/.settings');
-		@unlink($wd.'/.buildpath');
-		@unlink($wd.'/.project');
-
-		$out->writeTitle("Get Orpheus dependencies");
-		$composerConfig = json_decode(file_get_contents($wd.'/'.$this->composerJSONFile), true);
-		$composerConfig = array_intersect_key($composerConfig, array_flip(array('type', 'require')));
-		file_put_contents($wd.'/'.$this->composerJSONFile, json_encode($composerConfig));
-		// Retrieve Orpheus dependencies
-		system('php '.$wd.'/composer.phar install 2>&1');
-		echo "\n";
-		*/
-
-		$out->writeTitle("Installed Orpheus successfully !");
-
-// 		die("Composer install terminated\n");
-// 		echo "Composer install terminated\n";
+	function exec($command, FrontInterface $out=null) {
+		$returnVal = null;
+		system($command, $returnVal);
+		if( $out ) {
+			$out->write('');
+		}
+		if( $returnVal ) {
+			throw new Exception('Something went wrong running command "'.$command.'", returned value '.$returnVal);
+		}
 	}
 
 	function createComposerFile() {

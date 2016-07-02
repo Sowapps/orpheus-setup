@@ -96,6 +96,14 @@ function force_rmdir($path, $recursive=false) {
 	rmdir($path);
 }
 
+function isComposerProject($path) {
+	return file_exists($path.'/composer.json');
+}
+
+function isOrpheusProject($path) {
+	return file_exists($path.'/ORPHEUS-LICENSE.txt');
+}
+
 
 /**
  * Error Handler
