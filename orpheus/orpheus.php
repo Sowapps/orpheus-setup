@@ -12,13 +12,6 @@ function rmove($src, $dst) {
 			$srcPath = $src.'/'.$file;
 			$destPath = $dst.'/'.$file;
 			rename($srcPath, $destPath);
-		/*
-			if( is_dir($srcPath) ) {
-				recurse_move($srcPath, $destPath);
-			} else {
-				rename($srcPath, $destPath);
-			}
-			*/
 		}
 	}
 	closedir($dir);
@@ -37,13 +30,6 @@ function force_rmdir($path, $recursive=false) {
 			} else {
 				unlink($filePath);
 			}
-		/*
-			if( is_dir($srcPath) ) {
-				recurse_move($srcPath, $destPath);
-			} else {
-				rename($srcPath, $destPath);
-			}
-			*/
 		}
 	}
 	closedir($dir);
@@ -51,9 +37,6 @@ function force_rmdir($path, $recursive=false) {
 }
 
 function createComposerFile() {
-	// if( file_exists('composer.json') ) {
-		// return;
-	// }
 	file_put_contents('composer.json', json_encode(array(
 		'minimum-stability' => 'dev',
 		'require' => array(
@@ -66,8 +49,6 @@ class ConsoleProcessing {
 	
 	public function run() {
 		try {
-			// echo "Parameters\n";
-			// print_r($_SERVER['argv']);
 			if( !isset($_SERVER['argv'][1]) ) {
 				throw new Exception('Require at least one parameter (php '.$_SERVER['PHP_SELF'].' install|update)');
 			}
@@ -82,16 +63,9 @@ class ConsoleProcessing {
 				}
 			}
 		} catch( Exception $e ) {
-			// echo "An exception occurred\n".$e;
 			echo $e;
 		}
 	}
-	
-	// protected function __destruct() {
-		// if( file_exists($this->composerInstall) ) {
-			// unlink($this->composerInstall);
-		// }
-	// }
 	
 	protected $composerInstall = 'composer-setup.php';
 	protected function install() {
