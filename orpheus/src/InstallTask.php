@@ -1,11 +1,11 @@
 <?php
 
 class InstallTask extends Task {
-
+	
 	protected $composerInstallerURL = 'https://getcomposer.org/installer';
 	protected $composerInstallerFile = 'composer-setup.php';
 	protected $composerJSONFile = 'composer.json';
-
+	
 	protected $projectName;
 	
 	/**
@@ -41,7 +41,7 @@ class InstallTask extends Task {
 // 		return;
 		$out->writeMasterTitle('Orpheus Install');
 		
-		$out->write("Running on ".date('r')."\n");
+		$out->write("Running on " . date('r') . "\n");
 		
 		// Install composer.phar
 		$out->writeTitle('Get Composer');
@@ -64,7 +64,7 @@ class InstallTask extends Task {
 		system($command, $returnVal);
 // 		$out->write('');
 		if( $returnVal ) {
-			throw new Exception('Something went wrong with '.$this->composerInstallerFile.', command "'.$command.'" returned value '.$returnVal);
+			throw new Exception('Something went wrong with ' . $this->composerInstallerFile . ', command "' . $command . '" returned value ' . $returnVal);
 		}
 // 		$out->write('Command returned => '.$return);
 		unlink($wd.'/'.$this->composerInstallerFile);
@@ -79,13 +79,13 @@ class InstallTask extends Task {
 		if( file_exists($projectPath) ) {
 			$out->writeTitle('Update existing Orpheus project');
 			if( !is_dir($projectPath) || !is_writable($projectPath) ) {
-				throw new Exception('Project '.$projectFolder.' already exists and is not a folder.');
+				throw new Exception('Project ' . $projectFolder . ' already exists and is not a folder.');
 			}
 			if( !isComposerProject($projectPath) ) {
-				throw new Exception('Project '.$projectFolder.' already exists and is not a valid composer project.');
+				throw new Exception('Project ' . $projectFolder . ' already exists and is not a valid composer project.');
 			}
 			if( !isOrpheusProject($projectPath) ) {
-				throw new Exception('Project '.$projectFolder.' already exists and is not a valid composer project.');
+				throw new Exception('Project ' . $projectFolder . ' already exists and is not a valid orpheus project.');
 			}
 			// Install composer dependencies in Orpheus
 			$this->exec('php composer.phar install --working-dir '.$projectFolder.' --prefer-dist 2>&1', $out);
@@ -116,33 +116,31 @@ class InstallTask extends Task {
 		}
 		
 	}
-
-	function exec($command, FrontInterface $out=null) {
+	
+	function exec($command, FrontInterface $out = null) {
 		$returnVal = null;
 		system($command, $returnVal);
 		if( $out ) {
 			$out->write('');
 		}
 		if( $returnVal ) {
-			throw new Exception('Something went wrong running command "'.$command.'", returned value '.$returnVal);
+			throw new Exception('Something went wrong running command "' . $command . '", returned value ' . $returnVal);
 		}
 	}
-
+	
 	function createComposerFile() {
-		// if( file_exists('composer.json') ) {
-			// return;
-		// }
-		file_put_contents(APPLICATION_PATH.'/'.$this->composerJSONFile, json_encode(array(
+		file_put_contents(APPLICATION_PATH . '/' . $this->composerJSONFile, json_encode([
 			'minimum-stability' => 'dev',
-			'require' => array(
-				'orpheus/orpheus-framework' => '>=3.2.0'
-			)
-		)));
+			'require'           => [
+				'orpheus/orpheus-framework' => '>=3.2.0',
+			],
+		]));
 	}
 	
 	public function getProjectName() {
 		return $this->projectName;
 	}
+	
 	public function setProjectName($projectName) {
 		$this->projectName = $projectName;
 		return $this;
