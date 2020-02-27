@@ -117,6 +117,13 @@ class InstallTask extends Task {
 		
 	}
 	
+	function getUndesiredFileList() {
+		return [
+			'Eclipse'  => ['.settings', '.project', '.buildpath'],
+			'IntelliJ' => ['.idea'],
+		];
+	}
+	
 	function exec($command, FrontInterface $out = null) {
 		$returnVal = null;
 		system($command, $returnVal);
