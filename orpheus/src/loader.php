@@ -12,15 +12,15 @@ require_once 'ConsoleInterface.php';
 require_once 'WebInterface.php';
 
 function rcopy($src, $dst) {
-// 	echo "rcopy($src, $dst)\n";
 	$dir = opendir($src);
 	try {
 		mkdir($dst);
-	} catch( Exception $e ) {}
+	} catch( Exception $e ) {
+	}
 	while( ($file = readdir($dir)) !== false ) {
-		if( ($file !== '.') && ($file !== '..' ) ) {
-			$srcPath = $src.'/'.$file;
-			$destPath = $dst.'/'.$file;
+		if( ($file !== '.') && ($file !== '..') ) {
+			$srcPath = $src . '/' . $file;
+			$destPath = $dst . '/' . $file;
 			if( is_dir($srcPath) ) {
 				rcopy($srcPath, $destPath);
 			} else {
@@ -31,65 +31,45 @@ function rcopy($src, $dst) {
 	closedir($dir);
 }
 
-function rmove($src, $dst) {
-// 	echo "rmove($src, $dst)\n";
+function rmove($src, $dst, $force = false) {
 	$dir = opendir($src);
 	try {
 		mkdir($dst);
-	} catch( Exception $e ) {}
+	} catch( Exception $e ) {
+	}
+	$allMoved = true;
 	while( ($file = readdir($dir)) !== false ) {
-		if( ($file !== '.') && ($file !== '..' ) ) {
-			$srcPath = $src.'/'.$file;
-			$destPath = $dst.'/'.$file;
-// 			if( $file === '.git' ) {
-// 				force_rmdir($srcPath);
-// 				continue;
-// 			}
-// 			echo "$srcPath => $destPath\n";
-			rename($srcPath, $destPath);
-// 			die();
-			/*
-			 if( is_dir($srcPath) ) {
-				recurse_move($srcPath, $destPath);
-				} else {
+		if( $file !== '.' && $file !== '..' ) {
+			$srcPath = $src . '/' . $file;
+			$destPath = $dst . '/' . $file;
+			if( $force || !file_exists($destPath) ) {
 				rename($srcPath, $destPath);
-				}
-				*/
+			} else {
+				$allMoved = false;
+			}
 		}
 	}
 	closedir($dir);
-	rmdir($src);
+	if( $allMoved ) {
+		rmdir($src);
+	}
 }
 
 function b($b) {
 	return $b ? 'TRUE' : 'FALSE';
 }
 
-function force_rmdir($path, $recursive=false) {
-// 	echo "force_rmdir($path, ".b($recursive).")\n";
+function force_rmdir($path, $recursive = false) {
 	$dir = opendir($path);
 	while( ($file = readdir($dir)) !== false && $file !== null ) {
 		// Sometimes on a WAMP, a null occurs
-// 		var_dump($file);echo "\n";
-// 		echo "force_rmdir($path, ".b($recursive).") - file => $file \n";
 		if( $file !== '.' && $file !== '..' ) {
-			$filePath = $path.'/'.$file;
-// 			echo "$filePath => ".b(is_dir(realpath($filePath)))."\n";
-// 			echo "File exists ? => ".b(file_exists($filePath))."\n";
+			$filePath = $path . '/' . $file;
 			if( is_dir($filePath) ) {
-// 				if( $recursive ) {
 				force_rmdir($filePath);
-// 				}
 			} else {
 				unlink($filePath);
 			}
-			/*
-			 if( is_dir($srcPath) ) {
-				recurse_move($srcPath, $destPath);
-				} else {
-				rename($srcPath, $destPath);
-				}
-				*/
 		}
 	}
 	closedir($dir);
@@ -97,11 +77,11 @@ function force_rmdir($path, $recursive=false) {
 }
 
 function isComposerProject($path) {
-	return file_exists($path.'/composer.json');
+	return file_exists($path . '/composer.json');
 }
 
 function isOrpheusProject($path) {
-	return file_exists($path.'/ORPHEUS-LICENSE.txt');
+	return file_exists($path . '/ORPHEUS-LICENSE.txt');
 }
 
 
@@ -110,7 +90,19 @@ function isOrpheusProject($path) {
  *
  * System function to handle PHP errors and convert it into exceptions.
  */
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
+
+function generateRandomString($length = 64, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+	if( $length < 1 ) {
+		throw new RangeException('Length must be a positive integer');
+	}
+	$string = '';
+	$max = mb_strlen($keyspace, '8bit') - 1;
+	for( $i = 0; $i < $length; ++$i ) {
+		$string .= $keyspace[mt_rand(0, $max)];
+	}
+	return $string;
+}

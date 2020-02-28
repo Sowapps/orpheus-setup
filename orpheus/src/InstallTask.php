@@ -76,7 +76,9 @@ class InstallTask extends Task {
 		
 		$out->write('');
 		
-		if( file_exists($projectPath) && isComposerProject($projectPath) ) {
+		$folderExists = file_exists($projectPath);
+		
+		if( $folderExists && isComposerProject($projectPath) ) {
 			$out->writeTitle('Update existing Orpheus project');
 			if( !is_dir($projectPath) || !is_writable($projectPath) ) {
 				throw new Exception('Project ' . $projectFolder . ' already exists and is not a writable folder.');
