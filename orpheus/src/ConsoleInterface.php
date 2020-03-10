@@ -82,7 +82,7 @@ EOF;
 	
 	public function writeTitle($text) {
 		$titlePadding = 20;
-		$maxTextChar = 70 - $titlePadding;
+		$maxTextChar = 100 - $titlePadding;
 		if( strlen($text) > $maxTextChar ) {
 			$text = substr($text, 0, $maxTextChar);
 		}
