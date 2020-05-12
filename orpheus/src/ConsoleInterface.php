@@ -94,17 +94,17 @@ EOF;
 	}
 	
 	public function writeSmallTitle($text) {
-		echo $text."\n";
+		echo $text . "\n";
 	}
 	
-	public function reportException(Exception $e) {
+	public function reportException(Throwable $e) {
 		echo '
-*** '.get_class($e).'  ***
+*** ' . get_class($e) . '  ***
 
-'.$e->getMessage().'
+' . $e->getMessage() . '
 
 * Stacktrace *
-'.$e->getTraceAsString().'
+' . $e->getTraceAsString() . '
 ';
 	}
 	

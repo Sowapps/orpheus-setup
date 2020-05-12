@@ -18,6 +18,6 @@ abstract class FrontInterface {
 	
 	public abstract function writeSmallTitle($text);
 	
-	public abstract function reportException(Exception $e);
+	public abstract function reportException(Throwable $e);
 	
 }

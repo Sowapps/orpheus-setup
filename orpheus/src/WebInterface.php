@@ -97,22 +97,21 @@ EOF
 	}
 	
 	public function writeSmallTitle($text) {
-		echo '<h5>'.$text.'</h5>';
+		echo '<h5>' . $text . '</h5>';
 	}
 	
 	public function writeContent($content) {
-// 		file_get_contents('layouts/page_skeleton.php')
 		include 'static/layouts/page_skeleton.php';
 	}
 	
-	public function reportException(Exception $e) {
+	public function reportException(Throwable $e) {
 		echo '
-*** Error '.get_class($e).'  ***
+*** Error ' . get_class($e) . '  ***
 
-'.$e->getMessage().'
+' . $e->getMessage() . '
 
 * Stacktrace *
-'.$e->getTraceAsString().'
+' . $e->getTraceAsString() . '
 ';
 	}
 	
