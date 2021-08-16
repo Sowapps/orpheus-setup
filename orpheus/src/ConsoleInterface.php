@@ -19,13 +19,14 @@ class ConsoleInterface extends FrontInterface {
 		
 	}
 
-	public function hasInputTask() {
+	public function hasInputTask(): bool {
 		return isset($_SERVER['argv'][1]);
 	}
-
-	public function getInputTask() {
+	
+	public function getInputTask(): ?InstallTask {
 		switch( $_SERVER['argv'][1] ) {
-			case 'install': {
+			case 'install':
+			{
 				$task = new InstallTask();
 				if( empty($_SERVER['argv'][2]) ) {
 					throw new InvalidArgumentException('Missing projectname parameter');
@@ -33,14 +34,13 @@ class ConsoleInterface extends FrontInterface {
 				$task->setProjectName($_SERVER['argv'][2]);
 				break;
 			}
-// 			case 'update': {
+			// 			case 'update': {
 // 				$this->update();
 // 				break;
 // 			}
 		}
-		if( $task ) {
-			return $task;
-		}
+		
+		return $task ?? null;
 	}
 
 	public function printHelp() {
