@@ -1,24 +1,32 @@
 <?php
 
-class ConsoleInterface extends FrontInterface {
+namespace FrontInterface;
 
-	public function exec(Task $task) {
+use InvalidArgumentException;
+use Task\InstallTask;
+use Task\Task;
+use Throwable;
+
+class ConsoleInterface extends AbstractFrontInterface {
+	
+	public function exec(Task $task): void {
 		
-// 		ob_start();
+		$task->run($this);
+		// 		ob_start();
 		
-		try {
-			$task->run($this);
-// 			$this->write('Run ok in console');
-// 		} catch( Exception $e ) {
-// 			throw $e;
-		} finally {
-// 			ob_end_flush();
-// 			$this->write('Finally flushed console');
-		}
-// 		$this->write('Terminated task in console');
+		//		try {
+		//			$task->run($this);
+		// 			$this->write('Run ok in console');
+		// 		} catch( Exception $e ) {
+		// 			throw $e;
+		//		} finally {
+		// 			ob_end_flush();
+		// 			$this->write('Finally flushed console');
+		//		}
+		// 		$this->write('Terminated task in console');
 		
 	}
-
+	
 	public function hasInputTask(): bool {
 		return isset($_SERVER['argv'][1]);
 	}
@@ -35,15 +43,15 @@ class ConsoleInterface extends FrontInterface {
 				break;
 			}
 			// 			case 'update': {
-// 				$this->update();
-// 				break;
-// 			}
+			// 				$this->update();
+			// 				break;
+			// 			}
 		}
 		
 		return $task ?? null;
 	}
-
-	public function printHelp() {
+	
+	public function printHelp(): void {
 		echo <<<EOF
 USAGE
 	{$_SERVER['argv'][0]} {command}
@@ -55,20 +63,20 @@ COMMANDS
 EOF;
 	}
 	
-	public function write($text) {
-		echo $text."\n";
+	public function write($text): void {
+		echo $text . "\n";
 	}
 	
-	public function writeMasterTitle($text) {
+	public function writeMasterTitle(string $text): void {
 		$titlePadding = 20;
 		$maxTextChar = 80 - $titlePadding;
 		if( strlen($text) > $maxTextChar ) {
 			$text = substr($text, 0, $maxTextChar);
 		}
-		$lineLength = strlen($text)+$titlePadding;
+		$lineLength = strlen($text) + $titlePadding;
 		
 		$startRow = str_pad('', $lineLength, '*');
-		$emptyRow = '*'.str_pad('', $lineLength-2, ' ').'*';
+		$emptyRow = '*' . str_pad('', $lineLength - 2) . '*';
 		echo <<<EOF
 {$startRow}
 {$emptyRow}
@@ -80,7 +88,7 @@ EOF;
 EOF;
 	}
 	
-	public function writeTitle($text) {
+	public function writeTitle(string $text): void {
 		$titlePadding = 20;
 		$maxTextChar = 100 - $titlePadding;
 		if( strlen($text) > $maxTextChar ) {
@@ -93,18 +101,18 @@ EOF;
 EOF;
 	}
 	
-	public function writeSmallTitle($text) {
+	public function writeSmallTitle(string $text): void {
 		echo $text . "\n";
 	}
 	
-	public function reportException(Throwable $e) {
+	public function reportException(Throwable $exception): void {
 		echo '
-*** ' . get_class($e) . '  ***
+*** ' . get_class($exception) . '  ***
 
-' . $e->getMessage() . '
+' . $exception->getMessage() . '
 
 * Stacktrace *
-' . $e->getTraceAsString() . '
+' . $exception->getTraceAsString() . '
 ';
 	}
 	

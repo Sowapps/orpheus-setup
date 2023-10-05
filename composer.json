@@ -1,0 +1,14 @@
+{
+  "name": "orpheus/orpheus-setup",
+  "description": "Orpheus Setup",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Florent HAZARD",
+      "email": "contact@sowapps.com",
+      "homepage": "https://sowapps.com",
+      "role": "Developer"
+    }
+  ]
+}

@@ -1,10 +1,9 @@
 <?php
 
-// print_r($_SERVER);
 define('IS_CONSOLE', isset($_SERVER['argv']));
-define('IS_WEB', !IS_CONSOLE);
+const IS_WEB = !IS_CONSOLE;
 
-function rmove($src, $dst) {
+function rmove(string $src, string $dst): void {
 	$dir = opendir($src);
 	@mkdir($dst);
 	while( ($file = readdir($dir)) !== false ) {
@@ -18,7 +17,7 @@ function rmove($src, $dst) {
 	rmdir($src);
 }
 
-function force_rmdir($path, $recursive=false) {
+function force_rmdir(string $path, bool $recursive = false): void {
 	$dir = opendir($path);
 	while( ($file = readdir($dir)) !== false ) {
 		if( ($file !== '.') && ($file !== '..' ) ) {
@@ -36,7 +35,7 @@ function force_rmdir($path, $recursive=false) {
 	rmdir($path);
 }
 
-function createComposerFile() {
+function createComposerFile(): void {
 	file_put_contents('composer.json', json_encode(array(
 		'minimum-stability' => 'dev',
 		'require' => array(
@@ -46,13 +45,15 @@ function createComposerFile() {
 }
 
 class ConsoleProcessing {
+	protected string $composerInstall = 'composer-setup.php';
 	
-	public function run() {
+	public function run(): void {
 		try {
-			if( !isset($_SERVER['argv'][1]) ) {
+			$command = $_SERVER['argv'][1] ?? null;
+			if( !$command ) {
 				throw new Exception('Require at least one parameter (php '.$_SERVER['PHP_SELF'].' install|update)');
 			}
-			switch( $_SERVER['argv'][1] ) {
+			switch( $command ) {
 				case 'install': {
 					$this->install();
 					break;
@@ -67,8 +68,10 @@ class ConsoleProcessing {
 		}
 	}
 	
-	protected $composerInstall = 'composer-setup.php';
-	protected function install() {
+	/**
+	 * @throws Exception
+	 */
+	protected function install(): void {
 		if( !is_writable('.') ) {
 			throw new Exception('Install folder is not writable');
 		}
@@ -95,14 +98,14 @@ class ConsoleProcessing {
 		exec('php composer.phar install');
 	}
 	
-	protected function update() {
+	protected function update(): void {
 		echo "Update feature is not implemented yet.\n";
 	}
 	
 }
 
 class WebProcessing {
-	public function run() {
+	public function run(): void {
 		try {
 			echo "Web processing in progress";
 		} catch( Exception $e ) {

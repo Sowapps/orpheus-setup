@@ -1,15 +1,20 @@
-<?php
+<?php /** @noinspection ALL */
 
-require_once 'OperatingSystem.php';
-require_once 'WindowsNTOS.php';
-require_once 'UnixOS.php';
+require_once 'OperatingSystem/AbstractOperatingSystem.php';
+require_once 'OperatingSystem/WindowsNTOS.php';
+require_once 'OperatingSystem/UnixOS.php';
 
-require_once 'Task.php';
-require_once 'InstallTask.php';
+require_once 'Task/Task.php';
+require_once 'Task/InstallTask.php';
 
-require_once 'FrontInterface.php';
-require_once 'ConsoleInterface.php';
-require_once 'WebInterface.php';
+require_once 'FrontInterface/AbstractFrontInterface.php';
+require_once 'FrontInterface/EmptyInterface.php';
+require_once 'FrontInterface/ConsoleInterface.php';
+require_once 'FrontInterface/WebInterface.php';
+
+require_once 'ProcessContext/AbstractContext.php';
+require_once 'ProcessContext/ConsoleContext.php';
+require_once 'ProcessContext/EmptyContext.php';
 
 function rcopy($src, $dst) {
 	$dir = opendir($src);

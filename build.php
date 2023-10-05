@@ -3,6 +3,7 @@
 
 /*
  * php build.php && copy /Y orpheus.phar "..\..\Workspace-Web\OrpheusInstallerTest\"
+ * php -d phar.readonly=off build.php && cp orpheus.phar "..\..\Workspace-Web\OrpheusInstallerTest\"
  */
 
 try {

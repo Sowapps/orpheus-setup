@@ -5,8 +5,6 @@ if( isset($_SERVER['REQUEST_URI']) ) {
 	return;
 }
 
-// echo "CONSOLE STUB\n";
-
-define('IS_CONSOLE', 1);
+const IS_CONSOLE = 1;
 
 require_once '../bootstrap.php';

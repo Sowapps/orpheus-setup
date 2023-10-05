@@ -1,4 +1,7 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
+
+use FrontInterface\ConsoleInterface;
+use FrontInterface\WebInterface;
 
 require_once 'src/loader.php';
 
