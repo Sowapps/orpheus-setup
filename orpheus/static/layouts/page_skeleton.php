@@ -29,7 +29,7 @@ use Orpheus\Rendering\HtmlRendering;
 	<meta name="revisit-after" content="16 days"/>
 	<link rel="icon" type="image/png" href="https://orpheus-framework.com/static/images/icon.png"/>
 	
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" media="screen"/>
 
 </head>
@@ -54,7 +54,7 @@ use Orpheus\Rendering\HtmlRendering;
 
 </div>
 <!-- JS libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/js/bootstrap.min.js"></script>
 
 <?php /** @noinspection HtmlUnknownTag */ ?>
 <style>
