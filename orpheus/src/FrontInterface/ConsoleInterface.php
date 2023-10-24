@@ -32,7 +32,8 @@ class ConsoleInterface extends AbstractFrontInterface {
 	}
 	
 	public function getInputTask(): ?InstallTask {
-		switch( $_SERVER['argv'][1] ) {
+		$task = null;
+		switch( $_SERVER['argv'][1] ?? null ) {
 			case 'install':
 			{
 				$task = new InstallTask();
@@ -47,17 +48,20 @@ class ConsoleInterface extends AbstractFrontInterface {
 			// 				break;
 			// 			}
 		}
+		if( !$task ) {
+			throw new InvalidArgumentException('Invalid command');
+		}
 		
-		return $task ?? null;
+		return $task;
 	}
 	
 	public function printHelp(): void {
 		echo <<<EOF
-USAGE
-	{$_SERVER['argv'][0]} {command}
+{$_SERVER['argv'][0]} {command}
 
 COMMANDS
-	install projectname
+
+install projectname
 	Install Orpheus in the projectname directory.
 	
 EOF;

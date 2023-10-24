@@ -59,6 +59,7 @@ class InstallTask extends Task {
 		
 		// Allow relative and absolute paths
 		$projectFolder = basename($this->getProjectName());
+		$projectName = $projectFolder;
 		$projectPath = file_exists($this->getProjectName()) ? $this->getProjectName() : $wd . '/' . $this->getProjectName();
 		
 		$out->write('');
@@ -66,19 +67,19 @@ class InstallTask extends Task {
 		$folderExists = file_exists($projectPath);
 		
 		if( $folderExists && isComposerProject($projectPath) ) {
-			$out->writeTitle('Update existing Orpheus project');
+			$out->writeTitle(sprintf('Update existing Orpheus project "%s" into "%s"', $projectName, $projectPath));
 			if( !is_dir($projectPath) || !is_writable($projectPath) ) {
-				throw new Exception('Project ' . $projectFolder . ' already exists and is not a writable folder.');
+				throw new Exception(sprintf('Project "%s" already exists and is not a writable folder.', $projectName));
 			}
 			if( !isOrpheusProject($projectPath) ) {
-				throw new Exception('Project ' . $projectFolder . ' already exists and is not a valid orpheus project.');
+				throw new Exception(sprintf('Project "%s" already exists and is not a valid orpheus project.', $projectName));
 			}
 			// Install composer dependencies in Orpheus
 			$this->exec('php composer.phar install --working-dir ' . $projectFolder . ' --prefer-dist 2>&1', $out);
 			$out->writeTitle("Installed Orpheus dependencies in existing project successfully !");
 			
 		} else {
-			$out->writeTitle('Get Orpheus');
+			$out->writeTitle(sprintf('Get Orpheus to install project "%s" into "%s"', $projectName, $projectPath));
 			// Start install of Orpheus
 			$installPath = $projectFolder;
 			if( $folderExists ) {

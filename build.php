@@ -13,7 +13,7 @@ try {
 	try {
 		$phar->buildFromDirectory(dirname(__FILE__) . '/orpheus');
 	} catch( UnexpectedValueException $e ) {
-		throw new Exception('Unable to create phar archive, phar are readonly, edit the php.ini configuration to set phar.readonly to Off', 0, $e);
+		throw new Exception('Unable to create phar archive, phar are readonly, edit the php.ini configuration to set phar.readonly to Off or run this script using "-d phar.readonly=off"', 0, $e);
 	}
 	$phar->setDefaultStub('console/index.php', 'web/index.php');
 	echo 'Compiled files into ' . $archFile . "\n";
