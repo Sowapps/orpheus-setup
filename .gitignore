@@ -4,3 +4,5 @@
 /composer.*.json
 /composer.lock
 /orpheus.phar
+/project-test
+/.composer
